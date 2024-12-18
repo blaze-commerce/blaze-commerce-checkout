@@ -65,6 +65,7 @@ if ( ! class_exists( 'Blaze_Online_Checkout' ) ) {
             add_action( 'woocommerce_review_order_before_payment', array( $this, 'move_shipping_selector' ) );
             add_action( 'woocommerce_review_order_before_payment',  array( $this, 'move_shipping_selector' ) );
             add_filter( 'woocommerce_update_order_review_fragments', array( $this, 'select_shipping_custom_fragment' ) );
+            add_filter('woocommerce_checkout_show_terms', '__return_false');
 
             add_action( 'woocommerce_checkout_before_order_review_heading', array( $this, 'add_cart_total_section' ) );
 
@@ -258,6 +259,8 @@ function blaze_checkout_cart_totals_shipping_html() {
 		$product_names = array();
 
 		if ( count( $packages ) > 1 ) {
+            // Debug: Print all available shipping methods
+            // error_log('Available shipping methods: ' . print_r($package['rates'], true));
 			foreach ( $package['contents'] as $item_id => $values ) {
 				$product_names[ $item_id ] = $values['data']->get_name() . ' &times;' . $values['quantity'];
 			}
@@ -284,3 +287,10 @@ function blaze_checkout_cart_totals_shipping_html() {
 		$first = false;
 	}
 }
+
+// Add this filter to check if something is filtering the methods
+// add_filter('woocommerce_package_rates', 'debug_shipping_methods', 999, 2);
+// function debug_shipping_methods($rates, $package) {
+//     error_log('Shipping methods after filters: ' . print_r($rates, true));
+//     return $rates;
+// }
