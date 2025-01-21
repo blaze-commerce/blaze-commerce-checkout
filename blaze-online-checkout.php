@@ -5,10 +5,10 @@
  * 
  * @wordpress-plugin
  * Plugin Name: 	Blaze Online Checkout
- * Plugin URI: 		https://blaze.online/
+ * Plugin URI: 		https://blazecommerce.io/
  * Description: 	Blaze plugin for Checkout.
  * Author: 			Blaze Online
- * Author URI: 		https://blaze.online/
+ * Author URI: 		https://blazecommerce.io/
  *
  * Version: 		1.0.4
  *
@@ -63,9 +63,9 @@ if ( ! class_exists( 'Blaze_Online_Checkout' ) ) {
             remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10 );
             add_action( 'blaze_checkout_after_append_accordions', array( $this, 'add_payment_section' ) );
             add_action( 'woocommerce_review_order_before_payment', array( $this, 'move_shipping_selector' ) );
-            add_action( 'woocommerce_review_order_before_payment',  array( $this, 'move_shipping_selector' ) );
             add_filter( 'woocommerce_update_order_review_fragments', array( $this, 'select_shipping_custom_fragment' ) );
-
+            // add_filter('woocommerce_checkout_show_terms', '__return_false');
+            // add_filter('woocommerce_checkout_show_privacy_policy', '__return_false');
             add_action( 'woocommerce_checkout_before_order_review_heading', array( $this, 'add_cart_total_section' ) );
 
             // Creating the options page
@@ -131,7 +131,10 @@ if ( ! class_exists( 'Blaze_Online_Checkout' ) ) {
 	        $cartCount = $woocommerce->cart->cart_contents_count;
             ?>
                 <div class="cart-count-container">
-                    <h2 class="blaze-order-heading">Order summary</h2>
+                    <div class="cart-count-edit">
+                        <h2 class="blaze-order-heading">Order summary</h2>                    
+                        <span class="cart-count"><?php echo sprintf(_n('%d item', '%d items', $cartCount, 'blaze-online-checkout'), $cartCount); ?></span>
+                    </div>
                     <a href="/?cart=1">Edit<br></a>
                 </div>
             <?php
@@ -273,7 +276,7 @@ function blaze_checkout_cart_totals_shipping_html() {
 				'show_shipping_calculator' => is_cart() && apply_filters( 'woocommerce_shipping_show_shipping_calculator', $first, $i, $package ),
 				'package_details'          => implode( ', ', $product_names ),
 				/* translators: %d: shipping package number */
-				'package_name'             => apply_filters( 'woocommerce_shipping_package_name', ( ( $i + 1 ) > 1 ) ? sprintf( _x( 'Shipping %d', 'shipping packages', 'woocommerce' ), ( $i + 1 ) ) : _x( 'Shipping method', 'shipping packages', 'woocommerce' ), $i, $package ),
+				'package_name'             => apply_filters( 'woocommerce_shipping_package_name', ( ( $i + 1 ) > 1 ) ? sprintf( _x( 'Shipping %d', 'shipping packages', 'woocommerce' ), ( $i + 1 ) ) : _x( 'Choose Your Shipping', 'shipping packages', 'woocommerce' ), $i, $package ),
 				'index'                    => $i,
 				'chosen_method'            => $chosen_method,
 				'formatted_destination'    => WC()->countries->get_formatted_address( $package['destination'], ', ' ),
@@ -284,3 +287,10 @@ function blaze_checkout_cart_totals_shipping_html() {
 		$first = false;
 	}
 }
+
+// Add this filter to check if something is filtering the methods
+// add_filter('woocommerce_package_rates', 'debug_shipping_methods', 999, 2);
+// function debug_shipping_methods($rates, $package) {
+//     error_log('Shipping methods after filters: ' . print_r($rates, true));
+//     return $rates;
+// }
