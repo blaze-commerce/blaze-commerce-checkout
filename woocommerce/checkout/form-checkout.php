@@ -39,12 +39,12 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
             <?php do_action( 'blaze_checkout_before_customer_details_sections' ); ?>
                 <div class="checkout-form">
                     <div class="accordion-item">
-                        <div class="accordion-title billing-shipping-accordion"><?php _e( 'Recipients  Details', 'blaze-online-checkout' ) ?></div>
+                        <div class="accordion-title billing-shipping-accordion"><h5><?php _e( 'Recipients  Details', 'blaze-online-checkout' ) ?></h5></div>
                         
                         <div class="accordion-content billing-shipping-accordion-content">
                             
                             <div class="blz-billing-shipping-container">
-                                <h5 class="blaze-checkout-shipping-heading">Shipping address</h5>
+                                <!-- <h5 class="blaze-checkout-shipping-heading">Shipping address</h5> -->
                                 <div class="col-1">
                                     <div>
                                         <?php do_action( 'woocommerce_checkout_billing' ); ?>
@@ -59,7 +59,8 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
                                 <h5 class="blaze-checkout-register">Create an account</h5>
                                 <label class="blz-check-register">
                                     <input type="checkbox" id="save-info-checkbox">
-                                    Enter a password to save your information. <span style="font-style: italic;">(Optional)</span>
+                                    Enter a password to save your information. <span class="optional-text" style="font-style: italic;">(Optional)</span>
+                                    <span class="subscription-warning" style="color: red; display: none;">You need to be logged in when buying subscription products.</span>
                                 </label>
                                 <div class="woocommerce-form woocommerce-form-register register" <?php do_action( 'woocommerce_register_form_tag' ); ?> >
 
@@ -78,14 +79,14 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 
                                     <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
                                         <label for="reg_password"><?php esc_html_e( 'Password', 'woocommerce' ); ?>&nbsp;<span class="required">*</span></label>
-                                        <input type="password" placeholder="Password" class="woocommerce-Input woocommerce-Input--text input-text" name="password" id="reg_password" autocomplete="new-password" />
+                                        <input type="password" placeholder="Password" class="blaze-checkout-form-register-password-field woocommerce-Input woocommerce-Input--text input-text" name="password" id="reg_password" autocomplete="new-password" />
                                     </p>
 
                                     <?php do_action( 'woocommerce_register_form' ); ?>
 
                                     <p class="woocommerce-form-row form-row">
                                         <?php wp_nonce_field( 'woocommerce-register', 'woocommerce-register-nonce' ); ?>
-                                        <button type="submit" class="woocommerce-Button woocommerce-button button woocommerce-form-register__submit" name="register" value="<?php esc_attr_e( 'Register', 'woocommerce' ); ?>"><?php esc_html_e( 'REGISTER', 'woocommerce' ); ?></button>
+                                        <button type="submit" class="blaze-checkout-form-register-button woocommerce-Button woocommerce-button button woocommerce-form-register__submit" name="register" value="<?php esc_attr_e( 'Register', 'woocommerce' ); ?>"><?php esc_html_e( 'REGISTER', 'woocommerce' ); ?></button>
                                     </p>
 
                                     <?php do_action( 'woocommerce_register_form_end' ); ?>
@@ -93,8 +94,12 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
                                 </div>
                             </div>
                             <?php endif; ?>
+
+                            <!-- <div class="blz-continue-order">
+                                <p> By clicking 'Continue to Order Payment' you agree to the Terms and Conditions and Privacy and Cookie Policy. </p>
+                            </div> -->
                             <div class="blz-button-container">   
-                                <a class="btn-continue" href="http://" target="_self">Continue</a>
+                                <a class="btn-continue" href="http://" target="_self">CONTINUE TO ORDER PAYMENT →</a>
                             </div>
                         </div>
                         <div class="billing-shipping-content-preview billing-shippiing-content-preview"></div>
@@ -111,6 +116,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 	<?php endif; ?>
 	
 	<div class="blaze-online-checkout-order-review-wrap">
+        <div class="blz-order-summary-contaier">
         <?php do_action( 'woocommerce_checkout_before_order_review_heading' ); ?>
         
         <?php do_action( 'woocommerce_checkout_before_order_review' ); ?>
@@ -120,6 +126,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
         </div>
 
         <?php do_action( 'woocommerce_checkout_after_order_review' ); ?>
+        </div>
     </div>
 
 </form>

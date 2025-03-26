@@ -25,23 +25,39 @@
         <?php } else {
                 $current_user = wp_get_current_user();
                 $userEmail = $current_user->user_email;
-                echo '<div class="user-email">'. $userEmail .'</div>';
+                echo '<div class="user-email"><p>'. $userEmail .'</p></div>';
             ?>
             <input type="hidden" class="input-text" name="guest_email" id="guest_email" placeholder="Email address. *" value="<?php echo $userEmail; ?>">
         <?php } ?>
         <label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
             <input type="checkbox" class="newsletter-checkbox" name="newsletter-checkbox">
-            <span>SMS updates (optional)</span>
+            <p>SMS updates (optional)</p>
         </label>
+        <!-- <div class="blz-continue-order blz-continue-login">
+            <p> By clicking 'Continue to Order Payment' you agree to the Terms and Conditions and Privacy and Cookie Policy. </p>
+        </div> -->
         <a href="javascript:void(0);" class="btn-checkout-as-guest">
             <?php
                 if (is_user_logged_in()) {
-                    echo 'Submit';
+                    echo 'CONTINUE TO RECIPIENT DETAILS →';
                 } else {
-                    echo 'Submit';
+                    echo 'CONTINUE TO RECIPIENT DETAILS →';
                 }
             ?>
         </a>
+    </div>
+</div>
+<div class="blaze-checkout-signin">
+    <span>Have an Account?</span>
+    <div class="blaze-checkout-showhide">
+        <span class="blz-checkout-signin-show">Sign In to Save time 
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <g id="heroicons-mini/arrow-right">
+                <path id="Vector (Stroke)" fill-rule="evenodd" clip-rule="evenodd" d="M2.40002 8.00078C2.40002 7.66941 2.66865 7.40078 3.00002 7.40078L11.5104 7.40078L8.18416 4.23328C7.9453 4.0036 7.93785 3.62378 8.16752 3.38492C8.3972 3.14605 8.77703 3.1386 9.01589 3.36828L13.4159 7.56828C13.5335 7.6814 13.6 7.83757 13.6 8.00078C13.6 8.16399 13.5335 8.32016 13.4159 8.43328L9.01589 12.6333C8.77703 12.863 8.3972 12.8555 8.16753 12.6166C7.93785 12.3778 7.9453 11.998 8.18416 11.7683L11.5104 8.60078L3.00002 8.60078C2.66865 8.60078 2.40002 8.33215 2.40002 8.00078Z" fill="#111111"/>
+                </g>
+            </svg>
+        </span>
+        <span class="blz-checkout-signin-hide">Close</span>
     </div>
 </div>
 
@@ -50,8 +66,7 @@
 <?php if (!is_user_logged_in()) : ?>
     <div class="checkout-account-tabs">
         <ul class="tabs login-register">
-            <li class="active"><a data-trigger="tabs" data-target="#checkout-login"><?php _e( 'Sign in', 'blaze-online-checkout' ); ?></a></li>
-            <li><a data-trigger="tabs" data-target="#checkout-register"><?php _e( 'Register', 'blaze-online-checkout' ); ?></a></li>
+            <li class="active"><a data-trigger="tabs" data-target="#checkout-login"><?php _e( 'Sign In to Faster Checkout', 'blaze-online-checkout' ); ?></a></li>
         </ul>
 
         <div class="tab-panes blz-login-container">
