@@ -37,7 +37,6 @@
     var checkoutFunctions = function () {
       $(document).on('click', 'button.coupon-code-apply-button', function (e) {
         e.preventDefault();
-        e.stopImmediatePropagation();
 
         // Remove any existing error messages
         $('.blaze-coupon-error').remove();
@@ -45,19 +44,29 @@
         var couponCode = $('input#coupon-code-input').val();
         $('input#coupon_code').val(couponCode);
 
-        // Create an observer to watch for the error message
+        // Create an observer to watch for messages
         const observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 if (mutation.addedNodes.length) {
-                    // Get all error notices and take the last one
+                    // Check for success message
+                    const successNotice = document.querySelector('.is-success');
+                    // Check for error notices
                     const errorNotices = document.querySelectorAll('.coupon-error-notice');
-                    if (errorNotices.length > 0) {
+                    
+                    // Remove any existing messages first
+                    $('.blaze-coupon-error').remove();
+                    
+                    if (successNotice) {
+                        // Handle success case
+                        $('.coupon-code-form.blaze-form-toggle').append(
+                            '<div class="blaze-coupon-error blaze-coco" style="margin-top: 10px;">' + 
+                            successNotice.textContent + 
+                            '</div>'
+                        );
+                        observer.disconnect();
+                    } else if (errorNotices.length > 0) {
+                        // Handle error case
                         const lastErrorNotice = errorNotices[errorNotices.length - 1];
-                        
-                        // Remove any existing error messages first
-                        $('.blaze-coupon-error').remove();
-                        
-                        // Add new error message to our custom coupon container
                         $('.coupon-code-form.blaze-form-toggle').append(
                             '<div class="blaze-coupon-error" style="color: #cc0000; margin-top: 10px;">' + 
                             lastErrorNotice.textContent + 
@@ -78,6 +87,9 @@
         // Trigger WooCommerce's native coupon button
         $('form.checkout_coupon.woocommerce-form-coupon button.button').trigger('click');
     });
+
+  $("body.page-id-6 > div.wp-site-blocks > div.wp-block-group.has-global-padding.is-layout-constrained.wp-block-group-is-layout-constrained > h1").text("Secure Checkout");
+
     
     $(document).on('click', '.btn-checkout-as-guest', function(e) {
       e.preventDefault();
@@ -86,22 +98,25 @@
       var isLoggedIn = $('body').hasClass('logged-in') || $('body').hasClass('woocommerce-logged-in');
       
       if (validateEmail(guestEmail)) {
-        $('.information-content-preview')
-        .html('<span>'+ guestEmail +'</span>')
-        .css('display', 'flex');
+          $('.information-content-preview')
+              .html('<p class="verified-in-email">'+ guestEmail +'</p>')
+              .css('display', 'flex');
           $('.accordion-content').hide();
           $('.error-message').hide();
           // Only sync email if user is not logged in
           if (!isLoggedIn) {
-              $('#billing_email').val(guestEmail);
+            $('#billing_email').val(guestEmail);
           }
-         
-          $('.information-accordion').addClass('completed');
-          $('.information-content-preview').addClass('completed');
-          $(".information-content-preview").append(
-            '<span class="edit-button">Edit</span>'
-          );
           
+          // Add completed class
+          $('.accordion-title.information-accordion').addClass('completed');
+          
+          // Add and show edit button immediately
+          var $accordionTitle = $('.accordion-title.information-accordion');
+          if (!$accordionTitle.find('.edit-button').length) {
+              $accordionTitle.append('<span class="edit-button">Edit</span>');
+          }
+          $accordionTitle.find('.edit-button').show();
           if ( $(this).parents('.accordion-item').hasClass('direct-to-payment') && $('.billing-shipping-accordion').parent().hasClass('direct-to-payment')) {
             $('.payment-accordion-content').slideDown();
             $('#wc-stripe-payment-request-button-separator').prependTo('.payment-accordion-content');
@@ -290,20 +305,20 @@ if (phone == null || phone == '') {
 
         var billingShippingHTML = '<div class="preview-addresses">' +
                                  '<div class="address-section">' +
-                                 '<h4>Billing Address</h4>' +
-                                 '<span>'+ billingFirstName +' '+ billingLastName +'</span>' +
-                                 '<span>'+ billingCompanyName +' '+ billingPhoneNumber +'</span>' +
-                                 '<span>'+ billingAddress1 +'</span>' +
-                                 (billingAddress2 ? '<span>'+ billingAddress2 +'</span>' : '') +
-                                 '<span>'+ billingCity +', '+ billingStateRaw +', '+ billingPostCode +' / '+ billingCountryRaw + '</span>';
+                                 '<h4> Shipping Address</h4>' +
+                                 '<p>'+ billingFirstName +' '+ billingLastName +'</p>' +
+                                 '<p>'+ billingCompanyName +' '+ billingPhoneNumber +'</p>' +
+                                 '<p>'+ billingAddress1 +'</p>' +
+                                 (billingAddress2 ? '<p>'+ billingAddress2 +'</p>' : '') +
+                                 '<p>'+ billingCity +', '+ billingStateRaw +', '+ billingPostCode +' / '+ billingCountryRaw + '</p>';
 
         if (isDifferentShipping) {
-            billingShippingHTML += '<h4 class="shipping-title">Shipping Address</h4>' +
-                                  '<span>'+ shippingFirstName +' '+ shippingLastName +'</span>' +
-                                  (shippingCompanyName ? '<span>'+ shippingCompanyName +'</span>' : '') +
-                                  '<span>'+ shippingAddress1 +'</span>' +
-                                  (shippingAddress2 ? '<span>'+ shippingAddress2 +'</span>' : '') +
-                                  '<span>'+ shippingCity +', '+ shippingStateRaw +', '+ shippingPostCode +' / '+ shippingCountryRaw + '</span>';
+            billingShippingHTML += '<h4 class="shipping-title">Billing Address</h4>' +
+                                  '<p>'+ shippingFirstName +' '+ shippingLastName +'</p>' +
+                                  (shippingCompanyName ? '<p>'+ shippingCompanyName +'</p>' : '') +
+                                  '<p>'+ shippingAddress1 +'</p>' +
+                                  (shippingAddress2 ? '<p>'+ shippingAddress2 +'</p>' : '') +
+                                  '<p>'+ shippingCity +', '+ shippingStateRaw +', '+ shippingPostCode +' / '+ shippingCountryRaw + '</p>';
         }
 
         billingShippingHTML += '</div></div>';
@@ -315,9 +330,19 @@ if (phone == null || phone == '') {
         $('#wc-stripe-payment-request-wrapper').insertBefore('#wc-stripe-payment-request-button-separator');
         $('.billing-shipping-accordion').addClass('completed');
         $('.billing-shippiing-content-preview').addClass('completed');
-        $('.billing-shippiing-content-preview').append('<span class="edit-button">Edit</span>');
+
+        // Add edit button if it doesn't exist yet
+        if ($('.billing-shipping-accordion').hasClass('completed')) {
+
+          if (!$('.accordion-title.billing-shipping-accordion .edit-button').length) {
+            $('.accordion-title.billing-shipping-accordion').append('<span class="edit-button">Edit</span>');
+            
+            // Verify the button was added
+              $('.accordion-title.billing-shipping-accordion').html();
+          }
+        }
+
         $(this).parents('.accordion-item').addClass('direct-to-payment');
-        //console.log($('.payment-accordion-content').offset());
         setTimeout(function() {
           var top = $('.payment-accordion-content').offset().top - 64;
           $('html').animate({scrollTop: top}, 'fast');
@@ -328,49 +353,54 @@ if (phone == null || phone == '') {
     // if ( $('.information-accordion-preview .edit-button').length == 0 ) {
       $(document).on(
         "click",
-        '.information-content-preview .edit-button',function () {
-          console.log('Event triggered'); // Debugging line
+        '.accordion-title.information-accordion .edit-button',
+        function () {
           $('.accordion-content').hide();
           $('.information-accordion-preview').removeClass('completed');
           $('.information-content-preview').hide();
           $('.information-accordion-content').slideDown();
           $('.information-accordion').removeClass('completed');
+          
+          // Remove this edit button
+          $(this).remove();
 
-        if ($('.direct-to-payment .billing-shipping-accordion').length > 0) {
-          var firstName = $('#billing_first_name').val();
-          var lastName = $('#billing_last_name').val();
-          var phoneNumber = $('#billing_phone').val();
-          var companyName = $('#billing_company').val();
-          var address1 = $('#billing_address_1').val();
-          var address2 = $('#billing_address_2').val();
-          var city = $('#billing_city').val();
-          var stateRaw = $('#billing_state').val();
-          var state = $('#billing_state option[value="'+ stateRaw +'"]').text();
-          var postCode = $('#billing_postcode').val();
-          var countryRaw = $('#billing_country').val();
-          var country = $('#billing_country option[value="'+ countryRaw +'"]').text();
+          if ($('.direct-to-payment .billing-shipping-accordion').length > 0) {
+            var firstName = $('#billing_first_name').val();
+            var lastName = $('#billing_last_name').val();
+            var phoneNumber = $('#billing_phone').val();
+            var companyName = $('#billing_company').val();
+            var address1 = $('#billing_address_1').val();
+            var address2 = $('#billing_address_2').val();
+            var city = $('#billing_city').val();
+            var stateRaw = $('#billing_state').val();
+            var state = $('#billing_state option[value="'+ stateRaw +'"]').text();
+            var postCode = $('#billing_postcode').val();
+            var countryRaw = $('#billing_country').val();
+            var country = $('#billing_country option[value="'+ countryRaw +'"]').text();
 
-          var billingShippingHTML = '<span>'+ firstName +' '+ lastName +'</span>'
-                                  + '<span>'+ companyName +' '+ phoneNumber +'</span>'
-                                  + '<span>'+ address1 +'</span>'
-                                  + (address2 ? '<span>'+ address2 +'</span>' : '')
-                                  + '<span>'+ city +', '+ state +', '+ postCode +' </span>';
-          // $('.billing-shipping-content-preview').html(billingShippingHTML).show();
-          $('.billing-shipping-accordion').addClass('completed');
-          $('#wc-stripe-payment-request-button-separator').prependTo('.checkout.woocommerce-checkout');
-          $('#wc-stripe-payment-request-wrapper').insertBefore('#wc-stripe-payment-request-button-separator');
+            var billingShippingHTML = '<span>'+ firstName +' '+ lastName +'</span>'
+                                    + '<span>'+ companyName +' '+ phoneNumber +'</span>'
+                                    + '<span>'+ address1 +'</span>'
+                                    + (address2 ? '<span>'+ address2 +'</span>' : '')
+                                    + '<span>'+ city +', '+ state +', '+ postCode +' </span>';
+            $('.billing-shipping-accordion').addClass('completed');
+            $('#wc-stripe-payment-request-button-separator').prependTo('.checkout.woocommerce-checkout');
+            $('#wc-stripe-payment-request-wrapper').insertBefore('#wc-stripe-payment-request-button-separator');
+          }
         }
-      });
+      );
    // }
 
       
    $(document).on(
     "click",
-    '.billing-shipping-content-preview .edit-button',function () {
+    '.accordion-title.billing-shipping-accordion .edit-button',function () {
         $('.accordion-content').hide();
         $('.billing-shipping-content-preview').hide();
         $('.billing-shipping-accordion-content').slideDown().addClass('show-flex');
         $('.billing-shipping-accordion').removeClass('completed');
+        // Remove this edit button
+        $(this).remove();
 
         if ($('.direct-to-payment .information-accordion').length > 0) {
           var guestEmail = $('#guest_email').val();
@@ -460,15 +490,34 @@ if (phone == null || phone == '') {
     });
     $(document).on('click', '.woocommerce-form-register__submit', function(e) {
       e.preventDefault();
-      openPost( window.location.href, {
-        'username': $('input#reg_username').val(),
-        'email': $('input#reg_email').val(),
-        'password': $('input#reg_password').val(),
-        'woocommerce-register-nonce': $('input#woocommerce-register-nonce').val(),
-        '_wp_http_referer': $('input[name="_wp_http_referer"]').val(),
-        'register': 'Register',
-      });
-    });
+      // Show loading overlay
+      showLoadingState();
+  
+      // Collect form data
+      const postData = {
+          'username': $('input#reg_username').val(),
+          'email': $('input#reg_email').val(),
+          'password': $('input#reg_password').val(),
+          'woocommerce-register-nonce': $('input#woocommerce-register-nonce').val(),
+          '_wp_http_referer': $('input[name="_wp_http_referer"]').val(),
+          'register': 'Register',
+      };
+
+      // Execute form submission
+      openPost(window.location.href, postData);
+  });
+  
+  // Function to show loading overlay
+  function showLoadingState() {
+      // Remove existing overlay (to prevent duplicates)
+      $('.loading-overlay').remove();
+  
+      $('body').append(`
+          <div class="loading-overlay">
+              <div class="loading-message">Processing Registration...</div>
+          </div>
+      `);
+  }
 
     // Make order review sticky
     var offset = 200;
@@ -537,53 +586,65 @@ if (phone == null || phone == '') {
     const billingFields = [
         'billing_first_name',
         'billing_last_name',
-        'billing_phone'
+        'billing_phone',
+        'billing_address_1',
+        'billing_city',
+        'billing_postcode'
     ];
 
-    billingFields.forEach(field => {
-        $(document).on('change keyup', `#${field}`, function () {
-            const fieldValue = $(this).val();
-            if (fieldValue) {
-                localStorage.setItem(`blaze_${field}`, fieldValue);
-            }
-        });
-    });
-  }
+    // Use event delegation to ensure dynamically replaced fields are handled
+    $(document).on('change keyup', '[id^="billing_"]', function () {
+      const fieldId = $(this).attr('id');
+      const fieldValue = $(this).val();
+      localStorage.setItem(`blaze_${fieldId}`, fieldValue);
+  });
+}
 
   // Function to restore billing field values
   function restoreBillingFields() {
     const billingFields = [
         'billing_first_name',
         'billing_last_name',
-        'billing_phone'
+        'billing_phone',
+        'billing_address_1',
+        'billing_city',
+        'billing_postcode'
     ];
 
     billingFields.forEach(field => {
-        const savedValue = localStorage.getItem(`blaze_${field}`);
-        if (savedValue && $(`#${field}`).length) {
-            $(`#${field}`).val(savedValue);
+      const savedValue = localStorage.getItem(`blaze_${field}`);
+      if (savedValue !== null) {
+          let $field = $(`#${field}`);
 
-            // Trigger validation for phone field if it exists
-            if (field === 'billing_phone' && typeof validatePhoneField === 'function') {
-                $(`#${field}`).trigger('blur');
-            }
-        }
-    });
-  }
+          if ($field.length) {
+              $field.val(savedValue).trigger('change'); // Trigger change for WooCommerce scripts
+          } else {
+              // Keep checking if the field gets dynamically added
+              let checkExist = setInterval(() => {
+                  $field = $(`#${field}`);
+                  if ($field.length) {
+                      $field.val(savedValue).trigger('change');
+                      clearInterval(checkExist);
+                  }
+              }, 500);
+          }
+      }
+  });
+}
 
   // Initialize the functions when document is ready
   $(document).ready(function () {
       saveBillingField();
       restoreBillingFields();
   });
+  // Reapply saved values when WooCommerce updates checkout fields
+  $(document.body).on('updated_checkout', function () {
+    restoreBillingFields();
+  });
 
   function validatePostcode(postcode, country) {
     // Common patterns for different countries
     const patterns = {
-        'US': /^\d{5}(-\d{4})?$/, // US ZIP code (5 digits, optional 4 digit extension)
-        'GB': /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/, // UK postcode
-        'CA': /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i, // Canadian postal code
-        'AU': /^\d{4}$/, // Australian postcode
         'default': /^[A-Z0-9\s-]{3,10}$/i // Generic pattern for other countries
     };
 
@@ -599,33 +660,33 @@ if (phone == null || phone == '') {
     return isValid;
   }
 
-  $(document).on('change keyup', '#shipping_postcode', function() {
-    const postcode = $(this).val();
-    const country = $('#shipping_country').val();
-    const $field = $(this).parent();
-    const $errorMessage = $field.find('.field-error');
-    const $continueButton = $('.btn-continue');
+  // $(document).on('change keyup', '#shipping_postcode', function() {
+  //   const postcode = $(this).val();
+  //   const country = $('#shipping_country').val();
+  //   const $field = $(this).parent();
+  //   const $errorMessage = $field.find('.field-error');
+  //   const $continueButton = $('.btn-continue');
     
-    // Remove any existing error message
-    if ($errorMessage.length) {
-        $errorMessage.remove();
-    }
+  //   // Remove any existing error message
+  //   if ($errorMessage.length) {
+  //       $errorMessage.remove();
+  //   }
     
-    if (postcode === '') {
-        const label = document.querySelector('label[for="shipping_postcode"]');
-        const postcodeText = label.childNodes[0].nodeValue.trim();
-        $field.append('<span class="field-error">' + postcodeText + ' is required.</span>');
-        $continueButton.addClass('disabled');
-        return;
-    }
+  //   if (postcode === '') {
+  //       const label = document.querySelector('label[for="shipping_postcode"]');
+  //       const postcodeText = label.childNodes[0].nodeValue.trim();
+  //       $field.append('<span class="field-error">' + postcodeText + ' is required.</span>');
+  //       $continueButton.addClass('disabled');
+  //       return;
+  //   }
     
-    if (!validatePostcode(postcode, country)) {
-        $field.append('<span class="field-error">Please enter a valid postcode/ZIP for your country.</span>');
-        $continueButton.addClass('disabled');
-    } else {
-        $continueButton.removeClass('disabled');
-    }
-  });
+  //   if (!validatePostcode(postcode, country)) {
+  //       $field.append('<span class="field-error">Please enter a valid postcode/ZIP for your country.</span>');
+  //       $continueButton.addClass('disabled');
+  //   } else {
+  //       $continueButton.removeClass('disabled');
+  //   }
+  // });
   
   // Update validation when shipping country changes
   $(document).on('change', '#shipping_country', function() {
@@ -719,11 +780,9 @@ jQuery(document).ready(function($) {
     // Attach a change event listener
     checkbox.on('change', function () {
         if (this.checked) {
-            console.log('Checkbox is checked');
             // Add your logic for when the checkbox is checked
             $( ".woocommerce-form.woocommerce-form-register.register" ).show();
         } else {
-            console.log('Checkbox is not checked');
             // Add your logic for when the checkbox is unchecked
             $( ".woocommerce-form.woocommerce-form-register.register" ).hide();
         }
@@ -740,7 +799,7 @@ jQuery(document).ready(function($) {
 jQuery(document).ready(function ($) {
   // Function to handle information edit button visibility
   function handleInfoEditButton() {
-      var $infoEditButton = $('.information-content-preview.completed .edit-button');
+      var $infoEditButton = $('.information-accordion.completed .edit-button');
       var $billingAccordion = $('.billing-shipping-accordion');
 
       if ($billingAccordion.hasClass('completed')) {
@@ -772,54 +831,17 @@ jQuery(document).ready(function ($) {
   }
 });
 
+
 jQuery(document).ready(function ($) {
   // Function to handle billing shipping edit button visibility
   function handleBillingShippingEditButton() {
-      var $billingShippingEditButton = $('.billing-shippiing-content-preview.completed .edit-button');
+      var $billingShippingEditButton = $('.billing-shipping-accordion.completed .edit-button');
       var $infoAccordion = $('.information-accordion');
 
       if ($infoAccordion.hasClass('completed')) {
           $billingShippingEditButton.show();
       } else {
           $billingShippingEditButton.hide();
-      }
-  }
-
-  // Run on page load
-  handleBillingShippingEditButton();
-
-  // Watch for class changes on information-accordion
-  const observer = new MutationObserver(function (mutations) {
-      mutations.forEach(function (mutation) {
-          if (mutation.attributeName === 'class') {
-              handleBillingShippingEditButton();
-          }
-      });
-  });
-
-  // Start observing
-  const infoAccordion = document.querySelector('.information-accordion');
-  if (infoAccordion) {
-      observer.observe(infoAccordion, {
-          attributes: true,
-          attributeFilter: ['class']
-      });
-  }
-});
-
-jQuery(document).ready(function ($) {
-  // Function to handle billing shipping edit button visibility and padding
-  function handleBillingShippingEditButton() {
-      var $billingShippingEditButton = $('.billing-shippiing-content-preview.completed .edit-button');
-      var $infoAccordion = $('.information-accordion');
-      var $contentPreview = $('.billing-shipping-content-preview.billing-shippiing-content-preview.completed');
-
-      if ($infoAccordion.hasClass('completed')) {
-          $billingShippingEditButton.show();
-          $contentPreview.css('padding', '30px 0px 0px 0px');
-      } else {
-          $billingShippingEditButton.hide();
-          $contentPreview.css('padding', '30px 0');
       }
   }
 
@@ -872,8 +894,8 @@ jQuery(document).ready(function ($) {
   $(document).ready(function() {
       function initializeSignInLogic() {
           // Get elements
-          const signInBtn = $('#customer_details > div.accordion-item > div.accordion-content.information-accordion-content > div.blaze-checkout-signin > div > span:nth-child(1)');
-          const closeBtn = $('#customer_details > div.accordion-item > div.accordion-content.information-accordion-content > div.blaze-checkout-signin > div > span:nth-child(3)');
+          const signInBtn = $('span.blz-checkout-signin-show');
+          const closeBtn = $('span.blz-checkout-signin-hide');
           const accountTabs = $('.checkout-account-tabs');
 
           // Click event for 'Sign In to Save time'
@@ -898,9 +920,10 @@ jQuery(document).ready(function ($) {
   jQuery(document).ready(function($) {
     $('div.blaze-register-container > div > p.mailchimp-newsletter').remove();
     $('div.col-1 > div > div > p.mailchimp-newsletter').remove();
-    $('#ship-to-different-address-checkbox').prop('checked', false);
+    $('#ship-to-different-address-checkbox').prop('checked', true);
     // Move the optional fields above the gov_order_field
-    $('.woocommerce-additional-fields').insertBefore('p#additional__field');
+    $('#ship-to-different-address > label > span').text('Billing address same as shipping address');
+    $('.woocommerce-additional-fields').insertBefore('.woocommerce-shipping-fields');
     $('#order_comments_field').attr('data-priority', '120');
     $('p#additional__field').attr('data-priority', '130');
     $('p#gov_order_field').attr('data-priority', '140');
@@ -912,8 +935,8 @@ jQuery(document).ready(function ($) {
       // Billing Company Field
       const $billingCompanyField = $('#billing_company_field');
       if ($billingCompanyField.length && !$billingCompanyField.prev('.blz-optional-company').length) {
-          const $addCompanyText = $('<div class="blz-optional-company">Add a company? (Optional)</div>');
-          const $closeCompany = $('<div class="blz-gift-close">Close</div>');
+          const $addCompanyText = $('<div class="blz-optional-company"><p>Add a company? (Optional)</p></div>');
+          const $closeCompany = $('<div class="blz-gift-close"><p>Close</p></div>');
   
           $billingCompanyField.before($addCompanyText);
           $billingCompanyField.before($closeCompany);
@@ -937,8 +960,8 @@ jQuery(document).ready(function ($) {
       // Billing Address 2 Field
       const $billingAddress2Field = $('#billing_address_2_field');
       if ($billingAddress2Field.length && !$billingAddress2Field.prev('.blz-optional-address').length) {
-          const $addAddressText = $('<div class="blz-optional-address">Add apartment, floor, etc. (Optional)</div>');
-          const $closeAddress = $('<div class="blz-gift-close">Close</div>');
+          const $addAddressText = $('<div class="blz-optional-address"><p>Add apartment, floor, etc. (Optional)</p></div>');
+          const $closeAddress = $('<div class="blz-gift-close"><p>Close</p></div>');
   
           $billingAddress2Field.before($addAddressText);
           $billingAddress2Field.before($closeAddress);
@@ -962,8 +985,8 @@ jQuery(document).ready(function ($) {
       // Order Comments Field
       const $orderCommentsField = $('#order_comments_field');
       if ($orderCommentsField.length && !$orderCommentsField.prev('.blz-optional-notes').length) {
-          const $addNotesText = $('<div class="blz-optional-notes">Add Notes? (Optional)</div>');
-          const $closeNotes = $('<div class="blz-gift-close">Close</div>');
+          const $addNotesText = $('<div class="blz-optional-notes"><p>Add Notes? (Optional)</p></div>');
+          const $closeNotes = $('<div class="blz-gift-close"><p>Close</p></div>');
   
           $orderCommentsField.before($addNotesText);
           $orderCommentsField.before($closeNotes);
@@ -983,31 +1006,6 @@ jQuery(document).ready(function ($) {
               $addNotesText.show();
           });
       }
-  
-      // Additional Field
-      const $additionalField = $('#additional__field');
-      if ($additionalField.length && !$additionalField.prev('.blz-optional-date').length) {
-          const $addDateText = $('<div class="blz-optional-date">Add Date? (Optional)</div>');
-          const $closeDate = $('<div class="blz-gift-close">Close</div>');
-  
-          $additionalField.before($addDateText);
-          $additionalField.before($closeDate);
-  
-          $closeDate.hide();
-          $additionalField.hide();
-  
-          $addDateText.on('click', function() {
-              $additionalField.show();
-              $closeDate.show();
-              $addDateText.hide();
-          });
-  
-          $closeDate.on('click', function() {
-              $additionalField.hide();
-              $closeDate.hide();
-              $addDateText.show();
-          });
-      }
     }
   
     // Insert custom prompts on page load
@@ -1019,5 +1017,148 @@ jQuery(document).ready(function ($) {
     $(document.body).on('updated_checkout', function() {
         insertCustomPrompts();
     });
+
+
+    function syncBillingToShipping(checkboxSelector) {
+      var $checkbox = $(checkboxSelector);
+      var $shippingAddress = $('.shipping_address');
+
+      // Array of billing and shipping fields to sync
+      var fields = [
+          { billing: '#billing_first_name', shipping: '#shipping_first_name' },
+          { billing: '#billing_last_name', shipping: '#shipping_last_name' },
+          { billing: '#billing_company', shipping: '#shipping_company' },
+          { billing: '#billing_country', shipping: '#shipping_country' },
+          { billing: '#billing_address_1', shipping: '#shipping_address_1' },
+          { billing: '#billing_address_2', shipping: '#shipping_address_2' },
+          { billing: '#billing_city', shipping: '#shipping_city' },
+          { billing: '#billing_state', shipping: '#shipping_state' },
+          { billing: '#billing_postcode', shipping: '#shipping_postcode' }
+      ];
+
+      if (!$checkbox.length) {
+          return;
+      }
+
+      // Function to sync fields and handle visibility
+      function syncFields() {
+          try {    
+              // Handle shipping address visibility with classes
+              if ($checkbox.is(':checked')) {
+                  $shippingAddress
+                      .removeClass('blz-don-uncheck')
+                      .addClass('blaze-don-check');
+              } else {
+                  $shippingAddress
+                      .removeClass('blaze-don-check')
+                      .addClass('blz-don-uncheck');
+              }
+
+              // Only sync fields if checkbox is checked
+              if ($checkbox.is(':checked')) {
+                  fields.forEach(function (field) {
+                      var $billingField = $(field.billing);
+                      var $shippingField = $(field.shipping);
+
+                      if ($billingField.length && $shippingField.length) {
+                          var billingValue = $billingField.val();
+                          $shippingField.val(billingValue).trigger('change');
+                      }
+                  });
+              }
+          } catch (error) {
+              console.error('Error in syncFields:', error);
+          }
+      }
+
+      // Initial state setup
+      syncFields();
+
+      // Listen for checkbox state changes
+      $checkbox.on('change', syncFields);
+
+      // Listen for input changes in billing fields
+      fields.forEach(function (field) {
+          $(document).on('input change', field.billing, function () {
+              if ($checkbox.is(':checked')) {
+                  var $shippingField = $(field.shipping);
+                  if ($shippingField.length) {
+                      $shippingField.val($(this).val()).trigger('change');
+                  }
+              }
+          });
+      });
+  }
+
+  // Call the function
+  syncBillingToShipping('#ship-to-different-address-checkbox');
   });
 })(jQuery);
+
+jQuery(document).ready(function($) {
+  $("body.woocommerce-checkout > div.wp-site-blocks > div.wp-block-group.has-global-padding.is-layout-constrained.wp-block-group-is-layout-constrained > h1").text("Secure Checkout");
+});
+
+// Click handler for the edit button
+// jQuery(document).ready(function($) {
+//   $('.blaze-edit-checkout-items').on('click', function(e) {
+//       e.preventDefault();
+      
+//       if ($('.blz-edit-checkout-items').is(':hidden')) {
+//           $('.blz-edit-checkout-items').fadeIn(300);
+//           $(this).text('Done');
+//       } else {
+//           $('.blz-edit-checkout-items').fadeOut(300);
+//           $(this).text('Edit');
+//       }
+//   });
+
+//   $(document).on('click', '.blz-remove-checkout-item', function(e) {
+//     e.preventDefault();
+    
+//     var $cartItem = $(this).closest('.cart_item');
+//     var $removeButton = $(this);
+//     var cartItemKey = $cartItem.data('cart-item-key');
+    
+//     // Add loading state
+//     $cartItem.addClass('removing');
+//     $removeButton.addClass('loading');
+    
+//     // Change edit button text back to Edit immediately
+//     $('.blaze-edit-checkout-items').text('Edit');
+    
+//     $.ajax({
+//         type: 'POST',
+//         url: wc_checkout_params.ajax_url,
+//         data: {
+//             action: 'remove_cart_item',
+//             cart_item_key: cartItemKey,
+//             security: wc_checkout_params.update_order_review_nonce
+//         },
+//         success: function(response) {
+//             $('body').trigger('update_checkout');
+//             $cartItem.slideUp(300, function() {
+//                 $(this).remove();
+                
+//                 // Get updated cart count via Ajax
+//                 $.ajax({
+//                     type: 'POST',
+//                     url: wc_checkout_params.ajax_url,
+//                     data: {
+//                         action: 'get_updated_cart_count'
+//                     },
+//                     success: function(response) {
+//                         $('.cart-count').html(response);
+//                     }
+//                 });
+//             });
+//         },
+//         error: function() {
+//             $cartItem.removeClass('removing');
+//             $removeButton.removeClass('loading');
+//             $removeButton.html(originalButtonContent);
+//             alert('Error removing item. Please try again.');
+//         }
+//     });
+// });
+// });
