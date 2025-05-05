@@ -4,7 +4,7 @@
  * Blaze plugin for Checkout.
  * 
  * @wordpress-plugin
- * Plugin Name: 	Blaze Online Checkout
+ * Plugin Name: 	Blaze Commerce Checkout
  * Plugin URI: 		https://blazecommerce.io/
  * Description: 	Blaze plugin for Checkout.
  * Author: 			Blaze Online
@@ -15,7 +15,7 @@
  * License: 		GPLv2 or later
  * License URI: 	http://www.gnu.org/licenses/gpl-2.0.html
  *
- * Text Domain: 	blaze-online-checkout
+ * Text Domain: 	blaze-commerce-checkout
  * Domain Path: 	languages  
  */
 
