@@ -50,8 +50,8 @@
 <?php if (!is_user_logged_in()) : ?>
     <div class="checkout-account-tabs">
         <ul class="tabs login-register">
-            <li class="active"><a data-trigger="tabs" data-target="#checkout-login"><?php _e( 'Sign in', 'blaze-online-checkout' ); ?></a></li>
-            <li><a data-trigger="tabs" data-target="#checkout-register"><?php _e( 'Register', 'blaze-online-checkout' ); ?></a></li>
+            <li class="active"><a data-trigger="tabs" data-target="#checkout-login"><?php _e( 'Sign in', 'blaze-commerce-checkout' ); ?></a></li>
+            <li><a data-trigger="tabs" data-target="#checkout-register"><?php _e( 'Register', 'blaze-commerce-checkout' ); ?></a></li>
         </ul>
 
         <div class="tab-panes blz-login-container">

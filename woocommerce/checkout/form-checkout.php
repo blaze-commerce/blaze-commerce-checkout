@@ -39,7 +39,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
             <?php do_action( 'blaze_checkout_before_customer_details_sections' ); ?>
                 <div class="checkout-form">
                     <div class="accordion-item">
-                        <div class="accordion-title billing-shipping-accordion"><?php _e( 'Recipients  Details', 'blaze-online-checkout' ) ?></div>
+                        <div class="accordion-title billing-shipping-accordion"><?php _e( 'Recipients  Details', 'blaze-commerce-checkout' ) ?></div>
                         
                         <div class="accordion-content billing-shipping-accordion-content">
                             
@@ -110,7 +110,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 
 	<?php endif; ?>
 	
-	<div class="blaze-online-checkout-order-review-wrap">
+	<div class="blaze-commerce-checkout-order-review-wrap">
         <?php do_action( 'woocommerce_checkout_before_order_review_heading' ); ?>
         
         <?php do_action( 'woocommerce_checkout_before_order_review' ); ?>

@@ -475,7 +475,7 @@ if (phone == null || phone == '') {
     if ( $('header').length > 0 ) {
       offset = $('header').height() + 20;
     }
-    // $('.blaze-online-checkout-order-review-wrap').css({
+    // $('.blaze-commerce-checkout-order-review-wrap').css({
     //   'position': 'sticky',
     //   'top': offset + 'px',
     // });

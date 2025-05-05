@@ -28,17 +28,17 @@
 
 //* Prevent direct access to the plugin
 if ( !defined( 'ABSPATH' ) ) {
-    wp_die( __( "Sorry, you are not allowed to access this page directly.", 'blaze-online-checkout' ) );
+    wp_die( __( "Sorry, you are not allowed to access this page directly.", 'blaze-commerce-checkout' ) );
 }
 
 //* Define constants
 define( 'BLAZE_CHECKOUT_VERSION', 	'1.0.4' );
-define( 'BLAZE_CHECKOUT_FILE', 		trailingslashit( dirname( __FILE__ ) ) . 'blaze-online-checkout.php' );
+define( 'BLAZE_CHECKOUT_FILE', 		trailingslashit( dirname( __FILE__ ) ) . 'blaze-commerce-checkout.php' );
 define( 'BLAZE_CHECKOUT_DIR', 		plugin_dir_path( BLAZE_CHECKOUT_FILE ) );
 define( 'BLAZE_CHECKOUT_URL', 		plugins_url( '/', BLAZE_CHECKOUT_FILE ) );
 
-if ( ! class_exists( 'Blaze_Online_Checkout' ) ) {
-    class Blaze_Online_Checkout
+if ( ! class_exists( 'Blaze_Commerce_Checkout' ) ) {
+    class Blaze_Commerce_Checkout
     {
         private static $instance = null;
 
@@ -76,18 +76,18 @@ if ( ! class_exists( 'Blaze_Online_Checkout' ) ) {
 
         public function blaze_script_and_styles()
         {
-            wp_enqueue_style( 'blaze-online-checkout', BLAZE_CHECKOUT_URL . 'assets/css/blaze-online-checkout.css', array(), BLAZE_CHECKOUT_VERSION );
-            wp_enqueue_script( 'blaze-online-checkout', BLAZE_CHECKOUT_URL . '/assets/js/blaze-online-checkout.js', array( 'jquery' ), BLAZE_CHECKOUT_VERSION );
+            wp_enqueue_style( 'blaze-commerce-checkout', BLAZE_CHECKOUT_URL . 'assets/css/blaze-commerce-checkout.css', array(), BLAZE_CHECKOUT_VERSION );
+            wp_enqueue_script( 'blaze-commerce-checkout', BLAZE_CHECKOUT_URL . '/assets/js/blaze-commerce-checkout.js', array( 'jquery' ), BLAZE_CHECKOUT_VERSION );
         }
 
         public function add_information_section()
         {
-            wc_get_template( 'checkout/blaze-online/information.php' );
+            wc_get_template( 'checkout/blaze-commerce/information.php' );
         }
 
         public function add_payment_section()
         {
-            wc_get_template( 'checkout/blaze-online/payment.php' );
+            wc_get_template( 'checkout/blaze-commerce/payment.php' );
         }
 
         public function move_shipping_selector()
@@ -112,7 +112,7 @@ if ( ! class_exists( 'Blaze_Online_Checkout' ) ) {
         public function select_shipping_custom_fragment( $fragments ) {     
             ob_start();
             ?>
-            <table class="blaze-online-checkout select-shipping-method">
+            <table class="blaze-commerce-checkout select-shipping-method">
                 <tbody>
                     <?php blaze_checkout_cart_totals_shipping_html(); ?>
                 </tbody>
@@ -133,7 +133,7 @@ if ( ! class_exists( 'Blaze_Online_Checkout' ) ) {
                 <div class="cart-count-container">
                     <div class="cart-count-edit">
                         <h2 class="blaze-order-heading">Order summary</h2>                    
-                        <span class="cart-count"><?php echo sprintf(_n('%d item', '%d items', $cartCount, 'blaze-online-checkout'), $cartCount); ?></span>
+                        <span class="cart-count"><?php echo sprintf(_n('%d item', '%d items', $cartCount, 'blaze-commerce-checkout'), $cartCount); ?></span>
                     </div>
                     <a href="/?cart=1">Edit<br></a>
                 </div>
@@ -174,7 +174,7 @@ if ( ! class_exists( 'Blaze_Online_Checkout' ) ) {
          */
         public function add_settings_tab($settings_tabs)
         {
-            $settings_tabs['blazecheckoutsettings'] = __('Blaze Checkout Settings', 'blaze-online');
+            $settings_tabs['blazecheckoutsettings'] = __('Blaze Checkout Settings', 'blaze-commerce');
             return $settings_tabs;
         }
 
@@ -214,15 +214,15 @@ if ( ! class_exists( 'Blaze_Online_Checkout' ) ) {
         {
             $settings = array(
                 'section_title' => array(
-                    'name'     => __('Checkout Settings', 'blaze-online'),
+                    'name'     => __('Checkout Settings', 'blaze-commerce'),
                     'type'     => 'title',
                     'desc'     => '',
                     'id'       => 'wc_blazecheckoutsettings_section_title'
                 ),
                 'express_checkout' => array(
-                    'name' => __('Enable Express Checkout', 'blaze-online'),
+                    'name' => __('Enable Express Checkout', 'blaze-commerce'),
                     'type' => 'checkbox',
-                    'desc' => __('This controls the visibility of the express checkout on the checkout page.', 'blaze-online'),
+                    'desc' => __('This controls the visibility of the express checkout on the checkout page.', 'blaze-commerce'),
                     'id'   => 'wc_blazecheckoutsettings_express_checkout'
                 ),
                 'section_end' => array(
@@ -234,7 +234,7 @@ if ( ! class_exists( 'Blaze_Online_Checkout' ) ) {
         }
     }
 
-    Blaze_Online_Checkout::get_instance();
+    Blaze_Commerce_Checkout::get_instance();
 }
 
 add_filter( 'woocommerce_locate_template', 'my_custom_woocommerce_template', 10, 3 );
@@ -268,7 +268,7 @@ function blaze_checkout_cart_totals_shipping_html() {
 		}
 
 		wc_get_template(
-			'cart/blaze-online/cart-shipping.php',
+			'cart/blaze-commerce/cart-shipping.php',
 			array(
 				'package'                  => $package,
 				'available_methods'        => $package['rates'],

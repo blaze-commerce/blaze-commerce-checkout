@@ -413,10 +413,10 @@ li.wc_payment_method {
     color: #6E6E6E;
 }
 
-table.blaze-online-checkout.select-shipping-method, table.blaze-online-checkout.select-shipping-method td {
+table.blaze-commerce-checkout.select-shipping-method, table.blaze-commerce-checkout.select-shipping-method td {
     border: 0;
 }
-table.blaze-online-checkout.select-shipping-method th {
+table.blaze-commerce-checkout.select-shipping-method th {
     text-align: left;
     padding: 10px 0 13px 0;
     border-bottom: 1px solid #DDDDDD;
@@ -425,7 +425,7 @@ table.blaze-online-checkout.select-shipping-method th {
 .woocommerce ul#shipping_method {
     margin: 22px 0 0 0 !important;
 }
-table.blaze-online-checkout.select-shipping-method {
+table.blaze-commerce-checkout.select-shipping-method {
     margin: 20px 0 0 0;
     width: 100%;
     padding: 0 30px 0 30px;
@@ -439,7 +439,7 @@ div#payment {
     margin-top: 10px !important;
     border-top: 1px solid #DDDDDD;
 }
-table.blaze-online-checkout.select-shipping-method th,div#payment::before{
+table.blaze-commerce-checkout.select-shipping-method th,div#payment::before{
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
@@ -477,12 +477,12 @@ div#payment::before {
 #order_review > table > tbody > tr:nth-child(1) {
     border-top: 1px solid rgba(0, 0, 0, .1);
 }
-.woocommerce-page.woocommerce-checkout form .blaze-online-checkout-order-review-wrap #order_review_heading,
-.woocommerce-page.woocommerce-checkout form .blaze-online-checkout-order-review-wrap #order_review {
+.woocommerce-page.woocommerce-checkout form .blaze-commerce-checkout-order-review-wrap #order_review_heading,
+.woocommerce-page.woocommerce-checkout form .blaze-commerce-checkout-order-review-wrap #order_review {
     width: 100%;
     float: none;
 }
-.blaze-online-checkout-order-review-wrap {
+.blaze-commerce-checkout-order-review-wrap {
     margin-bottom: 40px;
     padding: 34px 34px 0px 34px;
     border-radius: 4px;
@@ -613,7 +613,7 @@ hr.blaze-hr {
     background-color: #BEBEBE;
     margin: 0;
 }
-body > div.wp-site-blocks > div.gb-container.gb-container-2d976099 > div > form.checkout.woocommerce-checkout > div.blaze-online-checkout-order-review-wrap > div.cart-count-container > p{
+body > div.wp-site-blocks > div.gb-container.gb-container-2d976099 > div > form.checkout.woocommerce-checkout > div.blaze-commerce-checkout-order-review-wrap > div.cart-count-container > p{
     margin: 0;
 }
 #order_review > table > tfoot > tr.tax-rate.tax-rate-us-ny-state-tax-1 > td {
@@ -999,7 +999,7 @@ a.btn-continue:hover,.woocommerce-checkout #place_order:hover {
     margin-bottom: 9px;
 }
 @media screen and (min-width: 1024px) {
-    .blaze-online-checkout-order-review-wrap {
+    .blaze-commerce-checkout-order-review-wrap {
         width: 40%;
         float: right;
     }
@@ -1012,14 +1012,14 @@ a.btn-continue:hover,.woocommerce-checkout #place_order:hover {
     }
 }
 @media screen and (max-width: 1023px) {
-    .blaze-online-checkout-order-review-wrap,.blz-billing-shipping-container{
+    .blaze-commerce-checkout-order-review-wrap,.blz-billing-shipping-container{
         padding: 16px 16px 0 16px;
     }
     body.page-id-6 > div.wp-site-blocks > div.wp-block-group.has-global-padding.is-layout-constrained.wp-block-group-is-layout-constrained > h1{
         font-size: 30px;
     }
     #customer_details > div.checkout-form > div:nth-child(1) > div.accordion-content.billing-shipping-accordion-content.show-flex > div:nth-child(2),.blz-terms,.blz-button-container,
-    .blaze-checkout-signin,body.page-id-7 > div.wp-site-blocks > div > div.woocommerce,.preview-addresses,table.blaze-online-checkout.select-shipping-method,div#RouteWidget,div#payment{
+    .blaze-checkout-signin,body.page-id-7 > div.wp-site-blocks > div > div.woocommerce,.preview-addresses,table.blaze-commerce-checkout.select-shipping-method,div#RouteWidget,div#payment{
         padding: 0 16px !important;
     }
     .form-checkout,.checkout-account-tabs ul.tabs.login-register,.tab-panes.blz-login-container{
@@ -1059,7 +1059,7 @@ a.btn-continue:hover,.woocommerce-checkout #place_order:hover {
     }
 }
 @media screen and (max-width: 768px) {
-    .accordion-title,table.blaze-online-checkout.select-shipping-method th, div#payment::before,
+    .accordion-title,table.blaze-commerce-checkout.select-shipping-method th, div#payment::before,
     h2.blaze-order-heading,.checkout-account-tabs ul.tabs.login-register li a{
         font-size: 16px;
     }
