@@ -222,10 +222,17 @@ $(document).on("blur focusout", "#billing_phone", validatePhoneField);
         errorCount++;
       }
       if ( $('#billing_state').val() == null ||  $('#billing_state').val() == '') {
-        const label = document.querySelector('label[for="billing_state"]');
-        const stateText = label.childNodes[0].nodeValue.trim();
-        $('#billing_state').parent().append('<span class="field-error">' + stateText + ' is required.</div>');
-        errorCount++;
+        // Check if the state field is hidden (for countries like France)
+        if ($('#billing_state').parent().is(':hidden')) {
+          // If hidden, set the state value to match the city value
+          $('#billing_state').val($('#billing_city').val());
+        } else {
+          // Only show error if the field is visible and required
+          const label = document.querySelector('label[for="billing_state"]');
+          const stateText = label.childNodes[0].nodeValue.trim();
+          $('#billing_state').parent().append('<span class="field-error">' + stateText + ' is required.</div>');
+          errorCount++;
+        }
       }
       if ( $('#billing_postcode').val() === '') {
         const label = document.querySelector('label[for="billing_postcode"]');
