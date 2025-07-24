@@ -47,11 +47,11 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
                                 <h5 class="blaze-checkout-shipping-heading">Shipping address</h5>
                                 <div class="col-1">
                                     <div>
-                                        <?php do_action( 'woocommerce_checkout_billing' ); ?>
+                                        <?php do_action( 'woocommerce_checkout_shipping' ); ?>
                                     </div>
                                 </div>
                                 <div class="col-2">
-                                    <?php do_action( 'woocommerce_checkout_shipping' ); ?>
+                                    <?php do_action( 'woocommerce_checkout_billing' ); ?>
                                 </div>
                             </div>
                             <?php if ( ! is_user_logged_in() ) : ?>
